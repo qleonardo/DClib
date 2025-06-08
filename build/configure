@@ -1,0 +1,44 @@
+# Case insensitive comparisons
+shopt -s nocasematch
+
+
+# Check number of arguments
+if [ $# -eq 0 ]; then
+    echo -e "\\033[1;31mPlease specify:"
+    echo -e " - The shared memory runtime (Cilk or OpenMP) \\033[0;39m"
+    echo -e " - The decomposition strategy (Flat or Iso) \\033[0;39m"
+    exit
+fi
+
+# Parse arguments
+FORKJOIN=0
+SHARED=0
+OMP=0
+
+for i in $@; do
+    if [[ $i == "clean" ]]; then
+        rm -r CMakeCache.txt CMakeFiles/ cmake_install.cmake Makefile 
+        echo -e "\\033[1;32mBuild directory has been cleaned up\\033[0;39m"
+        exit
+    elif [[ $i == "cilk" ]]; then
+        SHARED="CILK"
+    elif [[ $i == "openmp" ]] || [[ $i == "omp" ]]; then
+        SHARED="OMP"
+        OMP=1
+    elif [[ $i == "forkjoin" ]]; then
+        FORKJOIN=1
+    else
+   	    echo -e "\\033[1;31mOption \"$i\" has been ignored\\033[0;39m"
+    fi
+done
+
+if [[ $SHARED != "cilk" ]] && [[ $SHARED != "omp" ]]; then
+    echo -e "\\033[1;31mPlease specify the shared memory runtime (Cilk or OpenMP) \
+             \\033[0;39m"
+    exit
+fi
+
+cmake -DSHARED=$SHARED -DFORKJOIN=$FORKJOIN -DOMP=$OMP . -G "Unix Makefiles"
+
+# Compile
+make -j4
