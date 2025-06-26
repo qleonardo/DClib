@@ -51,15 +51,8 @@ class DC
 		void DC_permute (int **tab, int *ntab, int *val, int *rev, int *perm, int nbRow, int offset);
 
 		void DC_permute_1D(int *ntab, int *perm, int nbRow, int offset);
-									  
-		// Apply local element permutation to global element permutation
-		void merge_permutations (int *perm, int *localPerm, int globalNbRow, int localNbRow, int firstRow, int lastRow);
 
 		void DC_create_permutation (int *perm, int *part, int *nRowPerRow, int **Row2Row, int size);
-
-		void DC_create_color_permutation (int *perm, int *part, int size);
-
-		void DC_coloring(DCNode *treePtr, int **Row2Row, int *nRowPerRow, int globalNbRow, int firstRow, int lastRow);
 
 	public:
 	
